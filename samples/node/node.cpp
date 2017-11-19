@@ -1,8 +1,19 @@
 #include <iostream>
 #include <proxy.h>
+#include <node.h>
+#include <v8.h>
 
-int main()
+using v8::FunctionCallbackInfo;
+using v8::Isolate;
+using v8::Local;
+using v8::Object;
+using v8::String;
+using v8::Value;
+
+void Method(const FunctionCallbackInfo<Value>& args)
 {
+  Isolate* isolate = args.GetIsolate();
+
   const char *url = "http://www.wired.com";
   std::cout << "Checking proxy url for " << url << std::endl;
 
@@ -20,6 +31,10 @@ int main()
     i++;
     proxy = proxies[i];
   }
-
-  return 0;
 }
+
+void Init(Local<Object> exports) {
+  NODE_SET_METHOD(exports, "node", Method);
+}
+
+NODE_MODULE(node, Init)
