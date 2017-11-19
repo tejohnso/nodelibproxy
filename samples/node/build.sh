@@ -1,1 +1,1 @@
-g++ -D MODULEDIR='""' -D BUILTIN_MODULES="" -I ../.. -I ../../libproxy -Wall -Wextra node.cpp ../../libproxy/*.cpp ../../libmodman/*.cpp -ldl -o node
+g++ --verbose -D MODULEDIR='"../../libproxy/modules"' -D BUILTIN_MODULES="X(config_envvar)" -I ../.. -I ../../libproxy -L ../../libproxy/modules -Wall -Wextra node.cpp ../../libproxy/modules/config_envvar.cpp ../../libproxy/*.cpp ../../libmodman/*.cpp -ldl -o node
