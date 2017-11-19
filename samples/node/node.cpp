@@ -2,6 +2,7 @@
 #include <proxy.h>
 #include <node.h>
 #include <v8.h>
+#include <uv.h>
 
 using v8::FunctionCallbackInfo;
 using v8::Isolate;
