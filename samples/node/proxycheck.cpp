@@ -21,12 +21,11 @@ struct func_baton {
 };
 
 void proxyFunc(uv_work_t *shared_ptr) {
-  pxProxyFactory* proxyFactory = px_proxy_factory_new();
-
-  func_baton *baton = (func_baton*) shared_ptr->data;
+  func_baton *baton = static_cast<func_baton*>(shared_ptr->data);
   std::string targetUrl = baton->targetUrl;
   std::cout << "passed in " << targetUrl << std::endl;
 
+  pxProxyFactory* proxyFactory = px_proxy_factory_new();
   char** proxies = px_proxy_factory_get_proxies(proxyFactory, &targetUrl[0u]);
 
   int i = 0;
@@ -53,6 +52,10 @@ void proxyFunc(uv_work_t *shared_ptr) {
 }
 
 void after(uv_work_t *shared_ptr, int status) {
+  func_baton *baton = static_cast<func_baton*>(shared_ptr->data);
+  std::string targetUrl = baton->targetUrl;
+
+  std::cout << "in post-work thread ...url is " << targetUrl << std::endl;
   std::cout << "need to call callback" << std::endl;
 }
 
@@ -81,7 +84,7 @@ void Method(const FunctionCallbackInfo<Value>& args)
   Local<Function> cb = Local<Function>::Cast(args[1]);
 
   func_baton *fb = new func_baton();
-  fb->shared_ptr.data = (void*) fb;
+  fb->shared_ptr.data = fb;
   fb->targetUrl = str;
   fb->callBack.Reset(isolate, cb);
 
