@@ -5,6 +5,7 @@
 #include <uv.h>
 
 using v8::Function;
+using v8::Persistent;
 using v8::FunctionCallbackInfo;
 using v8::Exception;
 using v8::Isolate;
@@ -16,7 +17,7 @@ using v8::Value;
 struct func_baton {
   uv_work_t shared_ptr;
   std::string targetUrl;
-  Local<Function> callBack;
+  Persistent<Function> callBack;
 };
 
 void proxyFunc(uv_work_t *shared_ptr) {
@@ -82,7 +83,7 @@ void Method(const FunctionCallbackInfo<Value>& args)
   func_baton *fb = new func_baton();
   fb->shared_ptr.data = (void*) fb;
   fb->targetUrl = str;
-  fb->callBack = cb;
+  fb->callBack.Reset(isolate, cb);
 
   uv_queue_work(uv_default_loop(), &fb->shared_ptr, proxyFunc, after);
 }
