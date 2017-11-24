@@ -62,7 +62,7 @@ void Method(const FunctionCallbackInfo<Value>& args)
 }
 
 void Init(Local<Object> exports) {
-  NODE_SET_METHOD(exports, "node", Method);
+  NODE_SET_METHOD(exports, "checkProxyFor", Method);
 }
 
 NODE_MODULE(node, Init)
