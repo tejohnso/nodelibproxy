@@ -20,5 +20,4 @@ void callback(uv_work_t *work_t, int status) {
   v8::Handle<v8::Value> argv[] = { Null(isolate) , result_list };
   v8::Local<v8::Function>::New(isolate, baton->callBack)->Call(isolate->GetCurrentContext()->Global(), 2, argv);
   baton->callBack.Reset();
-  delete work_t->data;
 }
