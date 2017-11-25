@@ -25,10 +25,9 @@ struct func_baton {
 
 void proxyFunc(uv_work_t *shared_ptr) {
   func_baton *baton = static_cast<func_baton*>(shared_ptr->data);
-  std::string targetUrl = baton->targetUrl;
 
   pxProxyFactory* proxyFactory = px_proxy_factory_new();
-  baton->proxies = px_proxy_factory_get_proxies(proxyFactory, &targetUrl[0u]);
+  baton->proxies = px_proxy_factory_get_proxies(proxyFactory, &baton->targetUrl[0u]);
 
   px_proxy_factory_free(proxyFactory);
 }
@@ -51,7 +50,7 @@ void after(uv_work_t *shared_ptr, int status) {
   Handle<Value> argv[] = { Null(isolate) , result_list };
   Local<Function>::New(isolate, baton->callBack)->Call(isolate->GetCurrentContext()->Global(), 2, argv);
   baton->callBack.Reset();
-  delete shared_ptr;
+  delete shared_ptr->data;
 }
 
 void Method(const FunctionCallbackInfo<Value>& args)
