@@ -10,53 +10,48 @@ using v8::FunctionCallbackInfo;
 using v8::Exception;
 using v8::Isolate;
 using v8::Local;
+using v8::Array;
 using v8::Object;
 using v8::String;
 using v8::Value;
+using v8::Handle;
 
 struct func_baton {
   uv_work_t shared_ptr;
   std::string targetUrl;
+  char **proxies;
   Persistent<Function> callBack;
 };
 
 void proxyFunc(uv_work_t *shared_ptr) {
   func_baton *baton = static_cast<func_baton*>(shared_ptr->data);
   std::string targetUrl = baton->targetUrl;
-  std::cout << "passed in " << targetUrl << std::endl;
 
   pxProxyFactory* proxyFactory = px_proxy_factory_new();
-  char** proxies = px_proxy_factory_get_proxies(proxyFactory, &targetUrl[0u]);
+  baton->proxies = px_proxy_factory_get_proxies(proxyFactory, &targetUrl[0u]);
 
-  int i = 0;
-  char* proxy = proxies[i];
-  if (!proxy) {
-    std::cout << "No proxies" << std::endl;
-  }
-
-  while (proxy) {
-    std::cout << proxy << std::endl;
-    i++;
-    proxy = proxies[i];
-  }
-
-  std::cout << "freeing proxies" << std::endl;
-  for (i = 0; proxies[i]; i++) {
-    free(proxies[i]);
-  }
-  std::cout << "freeing proxy" << std::endl;
-  free(proxies);
-  std::cout << "freeing factory" << std::endl;
   px_proxy_factory_free(proxyFactory);
-  std::cout << "proxyFunc complete" << std::endl;
 }
 
 void after(uv_work_t *shared_ptr, int status) {
+  Isolate *isolate = Isolate::GetCurrent();
+  v8::HandleScope handleScope(isolate);
+
   func_baton *baton = static_cast<func_baton*>(shared_ptr->data);
   std::string targetUrl = baton->targetUrl;
 
-  std::cout << "in post-work thread ...url is " << targetUrl << std::endl;
-  std::cout << "need to call callback" << std::endl;
+  char **proxies = baton->proxies;
+  Local<Array> result_list = Array::New(isolate);
+  for (unsigned int i = 0; proxies[i]; i++) {
+    Local<String> proxy = String::NewFromUtf8(isolate, &proxies[i][0u]);
+    result_list->Set(i, proxy);
+    free(proxies[i]);
+  }
+  free(proxies);
+  Handle<Value> argv[] = { Null(isolate) , result_list };
+  Local<Function>::New(isolate, baton->callBack)->Call(isolate->GetCurrentContext()->Global(), 2, argv);
+  baton->callBack.Reset();
+  delete shared_ptr;
 }
 
 void Method(const FunctionCallbackInfo<Value>& args)
@@ -74,10 +69,6 @@ void Method(const FunctionCallbackInfo<Value>& args)
       String::NewFromUtf8(isolate, "Wrong argument types")));
     return;
   }
-
-  char *url = "http://www.wired.com";
-
-  std::cout << "Checking proxy url for " << url << std::endl;
 
   v8::String::Utf8Value v8String(args[0]);
   std::string str(*v8String, v8String.length());
