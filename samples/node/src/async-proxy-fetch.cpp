@@ -1,11 +1,10 @@
 #include <proxy.h>
-#include "thread-baton.h"
+#include "node-v8-interface.h"
 
-void asyncProxyFetch(uv_work_t *work_t) {
-  thread_baton *baton = static_cast<thread_baton*>(work_t->data);
+void asyncProxyFetch(uv_work_t* work_t) {
+  pxProxyFactory* pf = px_proxy_factory_new();
+  char* url = nvi::getTargetUrl(work_t);
 
-  pxProxyFactory* proxyFactory = px_proxy_factory_new();
-  baton->proxies = px_proxy_factory_get_proxies(proxyFactory, &baton->targetUrl[0u]);
-
-  px_proxy_factory_free(proxyFactory);
+  nvi::setProxies(work_t, px_proxy_factory_get_proxies(pf, url));
+  px_proxy_factory_free(pf);
 }

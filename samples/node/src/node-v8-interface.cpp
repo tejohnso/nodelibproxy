@@ -2,38 +2,43 @@
 #include <v8.h>
 #include <uv.h>
 #include "thread-baton.h"
-#include "async-proxy-fetch.h"
-#include "callback.h"
+#include "node-v8-interface.h"
 
-void ExportMethod(const v8::FunctionCallbackInfo<v8::Value>& args) {
-  v8::Isolate* isolate = args.GetIsolate();
-
-  if (args.Length() != 2) {
-    isolate->ThrowException(v8::Exception::TypeError(
-      v8::String::NewFromUtf8(isolate, "Wrong number of arguments")));
-    return;
+namespace nvi {
+  void setProxies(uv_work_t* work_t, char** proxies) {
+    thread_baton *baton = static_cast<thread_baton*>(work_t->data);
+    baton->proxies = proxies;
   }
 
-  if (!args[0]->IsString() || !args[1]->IsFunction()) {
-    isolate->ThrowException(v8::Exception::TypeError(
-      v8::String::NewFromUtf8(isolate, "Wrong argument types")));
-    return;
+  char** getProxies(uv_work_t* work_t) {
+    thread_baton *baton = static_cast<thread_baton*>(work_t->data);
+    return baton->proxies;
   }
 
-  v8::String::Utf8Value urlArg(args[0]);
-  std::string str(*urlArg, urlArg.length());
-  v8::Local<v8::Function> cb = v8::Local<v8::Function>::Cast(args[1]);
+  char* getTargetUrl(uv_work_t* work_t) {
+    thread_baton *baton = static_cast<thread_baton*>(work_t->data);
 
-  thread_baton *baton = new thread_baton();
-  baton->work_t.data = baton;
-  baton->targetUrl = str;
-  baton->callBack.Reset(isolate, cb);
+    return &baton->targetUrl[0u];
+  }
 
-  uv_queue_work(uv_default_loop(), &baton->work_t, asyncProxyFetch, callback);
+  void callbackWith(uv_work_t* work_t, char** proxies) {
+    const unsigned int argc = 2;
+    thread_baton *baton = static_cast<thread_baton*>(work_t->data);
+    v8::Isolate *isolate = v8::Isolate::GetCurrent();
+    v8::HandleScope handleScope(isolate);
+
+    v8::Local<v8::Array> nodeArray = v8::Array::New(isolate);
+    for (unsigned int i = 0; proxies[i]; i++) {
+      v8::Local<v8::String> proxy = v8::String::NewFromUtf8(isolate, &proxies[i][0u]);
+      nodeArray->Set(i, proxy);
+      free(proxies[i]);
+    }
+    free(proxies);
+
+    v8::Handle<v8::Value> argv[] = {Null(isolate) , nodeArray};
+
+    auto cb = v8::Local<v8::Function>::New(isolate, baton->callBack);
+    cb->Call(isolate->GetCurrentContext()->Global(), argc, argv);
+    baton->callBack.Reset();
+  }
 }
-
-void Init(v8::Local<v8::Object> exports) {
-  NODE_SET_METHOD(exports, "checkProxyFor", ExportMethod);
-}
-
-NODE_MODULE(node, Init)
