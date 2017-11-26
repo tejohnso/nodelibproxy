@@ -14,8 +14,6 @@ namespace nvi {
   char* getTargetUrl(uv_work_t*);
 
   void callbackWith(uv_work_t*, char**);
-
-  void processNodeJSCall(const v8::FunctionCallbackInfo<v8::Value>&);
 }
 
 #endif
