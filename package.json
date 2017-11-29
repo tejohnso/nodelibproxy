@@ -7,7 +7,7 @@
     "doc": "doc"
   },
   "scripts": {
-    "test": "node samples/node/example/test.js",
+    "test": "echo 'see samples/node'",
     "build-libproxy": "mkdir build-libproxy && cd build-libproxy && mkdir install && cmake .. -DCMAKE_INSTALL_PREFIX=install -DMODULE_INSTALL_DIR=install/modules -DCMAKE_BUILD_TYPE=MinSizeRel -DWITH_PERL=no -DWITH_PYTHON2=no -DWITH_PYTHON3=no && make && make install",
     "publish": "npm run build-libproxy && node-pre-gyp-github rebuild package publish",
     "preinstall": "npm install node-pre-gyp node-pre-gyp-github",
