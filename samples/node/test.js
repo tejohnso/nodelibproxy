@@ -1,4 +1,4 @@
-const proxyCheck = require("libproxy-node");
+const proxyCheck = require("libproxy");
 const checkProxyFor = require("util").promisify(proxyCheck.checkProxyFor);
 
 checkProxyFor("http://www.google.com")

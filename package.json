@@ -1,5 +1,5 @@
 {
-  "name": "libproxy-node",
+  "name": "nodelibproxy",
   "version": "0.0.3",
   "description": "A nodejs native addon for libproxy",
   "main": "./index.js",
@@ -9,13 +9,15 @@
   "scripts": {
     "test": "echo 'see samples/node'",
     "build-libproxy": "mkdir build-libproxy && cd build-libproxy && mkdir install && cmake .. -DCMAKE_INSTALL_PREFIX=install -DMODULE_INSTALL_DIR=install/modules -DCMAKE_BUILD_TYPE=MinSizeRel -DWITH_PERL=no -DWITH_PYTHON2=no -DWITH_PYTHON3=no && make && make install",
-    "publish": "npm run build-libproxy && node-pre-gyp-github rebuild package publish",
+    "publish": "npm run build-libproxy && npm run pregyp && npm run github",
+    "pregyp": "node-pre-gyp clean install --fallback-to-build",
+    "github": "node-pre-gyp-github publish --release",
     "preinstall": "npm install node-pre-gyp node-pre-gyp-github",
     "install": "node-pre-gyp-github install && sudo node copy-shared-libs.js"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/tejohnso/libproxy-node.git"
+    "url": "git+https://github.com/tejohnso/nodelibproxy.git"
   },
   "keywords": [
     "libproxy",
@@ -25,16 +27,16 @@
   "author": "Tyler Johnson <mail@tyler-johnson.ca> (http://github.com/tejohnso)",
   "license": "LGPL-2.1",
   "bugs": {
-    "url": "https://github.com/tejohnso/libproxy-node/issues"
+    "url": "https://github.com/tejohnso/nodelibproxy/issues"
   },
   "binary": {
-    "module_name": "libproxy-node",
+    "module_name": "nodelibproxy",
     "module_path": "./lib/binding/{configuration}/{node_abi}-{platform}-{arch}/",
     "package_name": "{module_name}-v{version}-{node_abi}-{platform}-{arch}.tar.gz",
-    "host": "https://github.com/tejohnso/libproxy-node/releases/download/",
+    "host": "https://github.com/tejohnso/nodelibproxy/releases/download/",
     "remote_path": "{version}"
   },
-  "homepage": "https://github.com/tejohnso/libproxy-node#readme",
+  "homepage": "https://github.com/tejohnso/nodelibproxy#readme",
   "dependencies": {
     "node-pre-gyp": "^0.6.39",
     "node-pre-gyp-github": "^1.3.1"
