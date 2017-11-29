@@ -1,7 +1,7 @@
 {
   "targets": [
     {
-      "target_name": "proxycheck",
+      "target_name": "libproxy-node",
       "sources": [
         "bindings/node/src/callback.cpp",
         "bindings/node/src/async-proxy-fetch.cpp",

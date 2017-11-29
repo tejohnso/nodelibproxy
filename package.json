@@ -1,6 +1,6 @@
 {
-  "name": "proxycheck",
-  "version": "0.0.2",
+  "name": "libproxy-node",
+  "version": "0.0.3",
   "description": "A nodejs native addon for libproxy",
   "main": "./index.js",
   "directories": {
@@ -28,7 +28,7 @@
     "url": "https://github.com/tejohnso/libproxy-node/issues"
   },
   "binary": {
-    "module_name": "proxycheck",
+    "module_name": "libproxy-node",
     "module_path": "./lib/binding/{configuration}/{node_abi}-{platform}-{arch}/",
     "package_name": "{module_name}-v{version}-{node_abi}-{platform}-{arch}.tar.gz",
     "host": "https://github.com/tejohnso/libproxy-node/releases/download/",

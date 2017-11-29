@@ -1,6 +1,6 @@
-Forked from libproxy - see libproxy/samples/node
+#Libproxy-node
 
-Thanks for trying libproxy!
+A nodejs C/C++ native addon to access [libproxy](https://github.com/libproxy/libproxy)'s cross platform proxy detection features.
 
-To use libproxy in your application, check out the external API in the 
-proxy.h.
+### Sample
+See samples/node
