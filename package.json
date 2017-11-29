@@ -1,0 +1,45 @@
+{
+  "name": "proxycheck",
+  "version": "0.0.1",
+  "description": "A nodejs native addon for libproxy",
+  "main": "./index.js",
+  "directories": {
+    "doc": "doc"
+  },
+  "scripts": {
+    "test": "node samples/node/example/test.js",
+    "build-libproxy": "mkdir build-libproxy && cd build-libproxy && mkdir install && cmake .. -DCMAKE_INSTALL_PREFIX=install -DMODULE_INSTALL_DIR=install/modules -DCMAKE_BUILD_TYPE=MinSizeRel -DWITH_PERL=no -DWITH_PYTHON2=no -DWITH_PYTHON3=no && make && make install",
+    "publish": "npm run build-libproxy && node-pre-gyp-github rebuild package publish",
+    "preinstall": "npm install node-pre-gyp node-pre-gyp-github",
+    "install": "node-pre-gyp-github install && sudo node copy-shared-libs.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tejohnso/libproxy-node.git"
+  },
+  "keywords": [
+    "libproxy",
+    "proxy",
+    "detect"
+  ],
+  "author": "Tyler Johnson <mail@tyler-johnson.ca> (http://github.com/tejohnso)",
+  "license": "LGPL-2.1",
+  "bugs": {
+    "url": "https://github.com/tejohnso/libproxy-node/issues"
+  },
+  "binary": {
+    "module_name": "proxycheck",
+    "module_path": "./lib/binding/{configuration}/{node_abi}-{platform}-{arch}/",
+    "package_name": "{module_name}-v{version}-{node_abi}-{platform}-{arch}.tar.gz",
+    "host": "https://github.com/tejohnso/libproxy-node/releases/download/",
+    "remote_path": "{version}"
+  },
+  "homepage": "https://github.com/tejohnso/libproxy-node#readme",
+  "dependencies": {
+    "node-pre-gyp": "^0.6.39",
+    "node-pre-gyp-github": "^1.3.1"
+  },
+  "devDependencies": {
+    "node-gyp": "^3.6.2"
+  }
+}
