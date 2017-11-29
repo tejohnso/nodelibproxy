@@ -1,6 +1,6 @@
 {
   "name": "nodelibproxy",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "A nodejs native addon for libproxy",
   "main": "./index.js",
   "directories": {

@@ -5,6 +5,6 @@
   "author": "Tyler Johnson <mail@tyler-johnson.ca> (http://github.com/tejohnso)",
   "license": "LGPL-2.1",
   "dependencies": {
-    "libproxy-node": "file:../.."
+    "nodelibproxy": "file:../.."
   }
 }
