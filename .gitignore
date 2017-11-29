@@ -1,4 +1,5 @@
 build/
+build-libproxy/
 samples/node/node
 CMakeFiles
 *.cmake
