@@ -14,6 +14,3 @@ add_library(modman STATIC
 if(NOT WIN32)
 	target_link_libraries(modman ${CMAKE_DL_LIBS})
 endif()
-
-### Tests
-add_testdirectory(test)
