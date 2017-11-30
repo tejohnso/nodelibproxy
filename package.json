@@ -1,6 +1,6 @@
 {
   "name": "nodelibproxy",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "description": "A nodejs native addon for libproxy",
   "main": "./index.js",
   "directories": {
@@ -9,7 +9,7 @@
   "scripts": {
     "test": "echo 'see samples/node'",
     "build-libproxy": "mkdir build-libproxy && cd build-libproxy && mkdir install && cmake .. -DCMAKE_INSTALL_PREFIX=install -DMODULE_INSTALL_DIR=install/modules -DCMAKE_BUILD_TYPE=MinSizeRel -DWITH_PERL=no -DWITH_PYTHON2=no -DWITH_PYTHON3=no && make && make install",
-    "publish": "npm run build-libproxy && npm run pregyp && npm run github",
+    "gyppublish": "npm run build-libproxy && npm run pregyp && npm run github",
     "pregyp": "node-pre-gyp clean install --fallback-to-build && node-pre-gyp rebuild && node-pre-gyp package",
     "github": "node-pre-gyp-github publish --release",
     "preinstall": "npm install node-pre-gyp node-pre-gyp-github",
