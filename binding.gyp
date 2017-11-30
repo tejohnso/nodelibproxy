@@ -23,13 +23,7 @@
       "copies": [
         {
           "files": [
-            "<(PRODUCT_DIR)/<(module_name).node",
-            "<(PRODUCT_DIR)/../../build-libproxy/install/lib/libproxy.so.1.0.0",
-            "<(PRODUCT_DIR)/../../build-libproxy/install/lib/libproxy.so.1",
-            "<(PRODUCT_DIR)/../../build-libproxy/install/lib/libproxy.so",
-            "<(PRODUCT_DIR)/../../build-libproxy/install/modules/config_gnome3.so",
-            "<(PRODUCT_DIR)/../../build-libproxy/install/modules/config_kde.so",
-            "<(PRODUCT_DIR)/../../build-libproxy/install/libexec/pxgsettings"
+            "<(PRODUCT_DIR)/<(module_name).node"
           ],
           "destination": "<(module_path)"
         }
