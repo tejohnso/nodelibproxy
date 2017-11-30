@@ -11,7 +11,10 @@
       ],
       "link_settings": {
         "libraries": ["-lproxy"]
-      }
+      },
+      "include_dirs": [
+        "./libproxy"
+      ]
     },
     {
       "target_name": "action_after_build",
